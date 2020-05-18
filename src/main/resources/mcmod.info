@@ -1,0 +1,16 @@
+[
+{
+  "modid": "fakeblocks",
+  "name": "FakeBlocks",
+  "description": "FakeBlocks",
+  "version": "1.1.0",
+  "mcversion": "1.11",
+  "url": "",
+  "updateUrl": "https://minecraft.curseforge.com/projects/fakeblocks",
+  "authorList": ["Max Henkel"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
