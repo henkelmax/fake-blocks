@@ -1,5 +1,6 @@
 package de.maxhenkel.storage.blocks;
 
+import de.maxhenkel.storage.Config;
 import de.maxhenkel.storage.Main;
 import de.maxhenkel.storage.blocks.tileentity.FakeBlockTileEntity;
 import net.minecraft.block.*;
@@ -51,7 +52,7 @@ public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock 
             if (heldItem.getItem() instanceof BlockItem) {
                 Block block = ((BlockItem) heldItem.getItem()).getBlock();
                 BlockState setBlockstate = block.getStateForPlacement(new BlockItemUseContext(new ItemUseContext(player, handIn, hit)));
-                if (Block.isOpaque(block.getCollisionShape(setBlockstate, worldIn, pos, ISelectionContext.dummy())) && block.getRenderType(setBlockstate) == BlockRenderType.MODEL) {
+                if (Block.isOpaque(block.getCollisionShape(setBlockstate, worldIn, pos, ISelectionContext.dummy())) && block.getRenderType(setBlockstate) == BlockRenderType.MODEL && !Config.SERVER.getFakeBlockBlacklist().contains(block)) {
                     fakeBlock.setBlockState(setBlockstate);
                     if (!worldIn.isRemote) {
                         SoundType type = block.getSoundType(setBlockstate);
@@ -63,8 +64,10 @@ public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock 
                     return ActionResultType.SUCCESS;
                 }
             }
+        } else if (fakeBlock != null && fakeBlock.getBlock() != null) {
+            return ActionResultType.PASS;
         }
-        return ActionResultType.PASS;
+        return ActionResultType.SUCCESS;
     }
 
     @Override
