@@ -1,7 +1,5 @@
 {
-	"variants": {
-		"normal": {
-			"model": "fakeblocks:fakeblock"
-		}
-	}
+    "variants": {
+        "": { "model": "fakeblocks:block/fakeblock" }
+    }
 }

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DSD",
+    "SIS",
+    "DSD"
+  ],
+  "key": {
+    "D": {
+      "tag": "forge:dyes"
+    },
+    "S": {
+      "tag": "forge:rods/wooden"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "result": {
+    "item": "fakeblocks:fakeblock",
+    "count": 8
+  }
+}
