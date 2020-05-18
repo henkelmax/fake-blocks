@@ -1,19 +1,18 @@
 package de.maxhenkel.storage.blocks.tileentity;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
 
 import javax.annotation.Nullable;
 
 public class FakeBlockTileEntity extends TileEntity {
 
     @Nullable
-    protected Block block;
+    protected BlockState blockState;
 
     public FakeBlockTileEntity() {
         super(ModTileEntities.FAKE_BLOCK);
@@ -23,26 +22,26 @@ public class FakeBlockTileEntity extends TileEntity {
     public void read(CompoundNBT compound) {
         super.read(compound);
         if (compound.contains("Block")) {
-            block = Registry.BLOCK.getOrDefault(new ResourceLocation(compound.getString("Block")));
+            blockState = NBTUtil.readBlockState(compound.getCompound("Block"));
         }
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
-        if (block != null) {
-            compound.putString("Block", block.getRegistryName().toString());
+        if (blockState != null) {
+            compound.put("Block", NBTUtil.writeBlockState(blockState));
         }
         return compound;
     }
 
     @Nullable
-    public Block getBlock() {
-        return block;
+    public BlockState getBlock() {
+        return blockState;
     }
 
-    public void setBlock(@Nullable Block block) {
-        this.block = block;
+    public void setBlockState(@Nullable BlockState blockState) {
+        this.blockState = blockState;
         markDirty();
     }
 

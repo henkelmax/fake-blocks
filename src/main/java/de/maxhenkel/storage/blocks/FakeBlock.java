@@ -9,10 +9,7 @@ import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.IFluidState;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -53,11 +50,11 @@ public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock 
         if (fakeBlock != null && fakeBlock.getBlock() == null) {
             if (heldItem.getItem() instanceof BlockItem) {
                 Block block = ((BlockItem) heldItem.getItem()).getBlock();
-                BlockState fillBlockstate = block.getDefaultState();
-                if (Block.isOpaque(block.getCollisionShape(fillBlockstate, worldIn, pos, ISelectionContext.dummy())) && fillBlockstate.getMaterial().isOpaque()) {
-                    fakeBlock.setBlock(block);
+                BlockState setBlockstate = block.getStateForPlacement(new BlockItemUseContext(new ItemUseContext(player, handIn, hit)));
+                if (Block.isOpaque(block.getCollisionShape(setBlockstate, worldIn, pos, ISelectionContext.dummy())) && block.getRenderType(setBlockstate) == BlockRenderType.MODEL) {
+                    fakeBlock.setBlockState(setBlockstate);
                     if (!worldIn.isRemote) {
-                        SoundType type = block.getSoundType(fillBlockstate);
+                        SoundType type = block.getSoundType(setBlockstate);
                         worldIn.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, type.getPlaceSound(), SoundCategory.BLOCKS, type.getVolume(), type.getPitch());
                     }
                     if (!player.abilities.isCreativeMode) {
@@ -74,12 +71,12 @@ public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock 
     public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
         Optional<FakeBlockTileEntity> tileEntity = getTileEntity(world, pos);
         if (tileEntity.isPresent() && tileEntity.get().getBlock() != null) {
-            Block block = tileEntity.get().getBlock();
-            SoundType type = block.getSoundType(block.getDefaultState());
+            BlockState blockState = tileEntity.get().getBlock();
+            SoundType type = blockState.getBlock().getSoundType(blockState);
             world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, type.getPlaceSound(), SoundCategory.BLOCKS, type.getVolume(), type.getPitch());
-            tileEntity.get().setBlock(null);
+            tileEntity.get().setBlockState(null);
             if (!player.isCreative()) {
-                spawnAsEntity(world, pos, new ItemStack(block));
+                spawnAsEntity(world, pos, new ItemStack(blockState.getBlock()));
             }
             return false;
         }
@@ -98,7 +95,7 @@ public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock 
     public SoundType getSoundType(BlockState state, IWorldReader world, BlockPos pos, @Nullable Entity entity) {
         Optional<FakeBlockTileEntity> tileEntity = getTileEntity(world, pos);
         if (tileEntity.isPresent() && tileEntity.get().getBlock() != null) {
-            return tileEntity.get().getBlock().getSoundType(state, world, pos, entity);
+            return tileEntity.get().getBlock().getBlock().getSoundType(state, world, pos, entity);
         }
         return super.getSoundType(state, world, pos, entity);
     }
@@ -140,6 +137,6 @@ public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock 
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
         Optional<FakeBlockTileEntity> tileEntity = getTileEntity(world, pos);
-        return tileEntity.isPresent() && tileEntity.get().getBlock() != null ? new ItemStack(tileEntity.get().getBlock()) : super.getPickBlock(state, target, world, pos, player);
+        return tileEntity.isPresent() && tileEntity.get().getBlock() != null ? new ItemStack(tileEntity.get().getBlock().getBlock()) : super.getPickBlock(state, target, world, pos, player);
     }
 }

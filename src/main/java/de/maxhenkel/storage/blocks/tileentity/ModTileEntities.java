@@ -18,8 +18,6 @@ public class ModTileEntities {
         FAKE_BLOCK = TileEntityType.Builder.create(FakeBlockTileEntity::new, ModBlocks.FAKE_BLOCK).build(null);
         FAKE_BLOCK.setRegistryName(new ResourceLocation(Main.MODID, "fakeblock"));
         event.getRegistry().register(FAKE_BLOCK);
-
-
     }
 
     @OnlyIn(Dist.CLIENT)
