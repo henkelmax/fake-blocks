@@ -51,15 +51,15 @@ public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock 
         if (fakeBlock != null && fakeBlock.getBlock() == null) {
             if (heldItem.getItem() instanceof BlockItem) {
                 Block block = ((BlockItem) heldItem.getItem()).getBlock();
-                BlockState setBlockstate = block.getStateForPlacement(new BlockItemUseContext(new ItemUseContext(player, handIn, hit)));
-                if (Block.isOpaque(block.getCollisionShape(setBlockstate, worldIn, pos, ISelectionContext.dummy())) && block.getRenderType(setBlockstate) == BlockRenderType.MODEL && !Config.SERVER.getFakeBlockBlacklist().contains(block)) {
-                    fakeBlock.setBlockState(setBlockstate);
+                BlockState setBlockState = block.getStateForPlacement(new BlockItemUseContext(new ItemUseContext(player, handIn, hit)));
+                if (Block.isOpaque(block.getCollisionShape(setBlockState, worldIn, pos, ISelectionContext.dummy())) && block.getRenderType(setBlockState) == BlockRenderType.MODEL && !Config.SERVER.getFakeBlockBlacklist().contains(block)) {
                     if (!worldIn.isRemote) {
-                        SoundType type = block.getSoundType(setBlockstate);
+                        fakeBlock.setBlockState(setBlockState);
+                        SoundType type = block.getSoundType(setBlockState);
                         worldIn.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, type.getPlaceSound(), SoundCategory.BLOCKS, type.getVolume(), type.getPitch());
-                    }
-                    if (!player.abilities.isCreativeMode) {
-                        heldItem.shrink(1);
+                        if (!player.abilities.isCreativeMode) {
+                            heldItem.shrink(1);
+                        }
                     }
                     return ActionResultType.SUCCESS;
                 }
@@ -74,12 +74,14 @@ public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock 
     public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
         Optional<FakeBlockTileEntity> tileEntity = getTileEntity(world, pos);
         if (tileEntity.isPresent() && tileEntity.get().getBlock() != null) {
-            BlockState blockState = tileEntity.get().getBlock();
-            SoundType type = blockState.getBlock().getSoundType(blockState);
-            world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, type.getPlaceSound(), SoundCategory.BLOCKS, type.getVolume(), type.getPitch());
-            tileEntity.get().setBlockState(null);
-            if (!player.isCreative()) {
-                spawnAsEntity(world, pos, new ItemStack(blockState.getBlock()));
+            if (!world.isRemote) {
+                BlockState blockState = tileEntity.get().getBlock();
+                SoundType type = blockState.getBlock().getSoundType(blockState);
+                world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, type.getPlaceSound(), SoundCategory.BLOCKS, type.getVolume(), type.getPitch());
+                tileEntity.get().setBlockState(null);
+                if (!player.isCreative()) {
+                    spawnAsEntity(world, pos, new ItemStack(blockState.getBlock()));
+                }
             }
             return false;
         }

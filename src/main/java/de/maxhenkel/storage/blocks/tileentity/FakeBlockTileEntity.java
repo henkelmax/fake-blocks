@@ -1,11 +1,13 @@
 package de.maxhenkel.storage.blocks.tileentity;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 
@@ -23,6 +25,8 @@ public class FakeBlockTileEntity extends TileEntity {
         super.read(compound);
         if (compound.contains("Block")) {
             blockState = NBTUtil.readBlockState(compound.getCompound("Block"));
+        } else {
+            blockState = null;
         }
     }
 
@@ -43,6 +47,19 @@ public class FakeBlockTileEntity extends TileEntity {
     public void setBlockState(@Nullable BlockState blockState) {
         this.blockState = blockState;
         markDirty();
+    }
+
+    @Override
+    public void markDirty() {
+        super.markDirty();
+        if (world instanceof ServerWorld) {
+            ServerWorld serverWorld = (ServerWorld) world;
+            serverWorld.getPlayers(player -> getDistanceSq(player.getPosX(), player.getPosY(), player.getPosZ()) <= 128D * 128D).forEach(this::syncContents);
+        }
+    }
+
+    public void syncContents(ServerPlayerEntity player) {
+        player.connection.sendPacket(getUpdatePacket());
     }
 
     @Override
