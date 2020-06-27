@@ -1,7 +1,7 @@
-package de.maxhenkel.storage.integration.waila;
+package de.maxhenkel.fakeblocks.integration.waila;
 
-import de.maxhenkel.storage.blocks.ModBlocks;
-import de.maxhenkel.storage.blocks.tileentity.FakeBlockTileEntity;
+import de.maxhenkel.fakeblocks.blocks.ModBlocks;
+import de.maxhenkel.fakeblocks.blocks.tileentity.FakeBlockTileEntity;
 import mcp.mobius.waila.Waila;
 import mcp.mobius.waila.api.*;
 import mcp.mobius.waila.utils.ModIdentification;

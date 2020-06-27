@@ -1,4 +1,4 @@
-package de.maxhenkel.storage;
+package de.maxhenkel.fakeblocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;

@@ -1,6 +1,6 @@
-package de.maxhenkel.storage.integration.waila;
+package de.maxhenkel.fakeblocks.integration.waila;
 
-import de.maxhenkel.storage.blocks.tileentity.FakeBlockTileEntity;
+import de.maxhenkel.fakeblocks.blocks.tileentity.FakeBlockTileEntity;
 import mcp.mobius.waila.api.IRegistrar;
 import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.TooltipPosition;

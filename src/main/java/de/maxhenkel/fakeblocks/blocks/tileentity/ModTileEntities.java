@@ -1,8 +1,8 @@
-package de.maxhenkel.storage.blocks.tileentity;
+package de.maxhenkel.fakeblocks.blocks.tileentity;
 
-import de.maxhenkel.storage.Main;
-import de.maxhenkel.storage.blocks.ModBlocks;
-import de.maxhenkel.storage.blocks.tileentity.render.FakeBlockRenderer;
+import de.maxhenkel.fakeblocks.Main;
+import de.maxhenkel.fakeblocks.blocks.ModBlocks;
+import de.maxhenkel.fakeblocks.blocks.tileentity.render.FakeBlockRenderer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;

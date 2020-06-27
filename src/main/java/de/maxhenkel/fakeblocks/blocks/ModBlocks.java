@@ -1,4 +1,4 @@
-package de.maxhenkel.storage.blocks;
+package de.maxhenkel.fakeblocks.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;

@@ -1,15 +1,15 @@
-package de.maxhenkel.storage.blocks;
+package de.maxhenkel.fakeblocks.blocks;
 
-import de.maxhenkel.storage.Config;
-import de.maxhenkel.storage.Main;
-import de.maxhenkel.storage.blocks.tileentity.FakeBlockTileEntity;
+import de.maxhenkel.fakeblocks.Config;
+import de.maxhenkel.fakeblocks.Main;
+import de.maxhenkel.fakeblocks.blocks.tileentity.FakeBlockTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -31,7 +31,7 @@ import java.util.Optional;
 
 public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock {
 
-    public static final Material MATERIAL = new Material(MaterialColor.AIR, false, false, false, true, true, false, false, PushReaction.BLOCK);
+    public static final Material MATERIAL = new Material(MaterialColor.AIR, false, false, false, true, false, false, PushReaction.BLOCK);
 
     public FakeBlock() {
         super(Block.Properties.create(MATERIAL).hardnessAndResistance(0.25F).sound(SoundType.SCAFFOLDING).doesNotBlockMovement());
@@ -71,7 +71,7 @@ public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock 
     }
 
     @Override
-    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
+    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
         Optional<FakeBlockTileEntity> tileEntity = getTileEntity(world, pos);
         if (tileEntity.isPresent() && tileEntity.get().getBlock() != null) {
             if (!world.isRemote) {

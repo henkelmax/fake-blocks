@@ -1,4 +1,4 @@
-package de.maxhenkel.storage;
+package de.maxhenkel.fakeblocks;
 
 public class Tools {
 

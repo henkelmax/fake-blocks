@@ -1,4 +1,4 @@
-package de.maxhenkel.storage.blocks.tileentity;
+package de.maxhenkel.fakeblocks.blocks.tileentity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -21,12 +21,12 @@ public class FakeBlockTileEntity extends TileEntity {
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void func_230337_a_(BlockState blockState, CompoundNBT compound) {
+        super.func_230337_a_(blockState, compound);
         if (compound.contains("Block")) {
-            blockState = NBTUtil.readBlockState(compound.getCompound("Block"));
+            this.blockState = NBTUtil.readBlockState(compound.getCompound("Block"));
         } else {
-            blockState = null;
+            this.blockState = null;
         }
     }
 
@@ -54,7 +54,7 @@ public class FakeBlockTileEntity extends TileEntity {
         super.markDirty();
         if (world instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) world;
-            serverWorld.getPlayers(player -> getDistanceSq(player.getPosX(), player.getPosY(), player.getPosZ()) <= 128D * 128D).forEach(this::syncContents);
+            serverWorld.getPlayers(player -> player.getDistanceSq(getPos().getX(), getPos().getY(), getPos().getZ()) <= 128D * 128D).forEach(this::syncContents);
         }
     }
 
@@ -69,7 +69,7 @@ public class FakeBlockTileEntity extends TileEntity {
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        read(pkt.getNbtCompound());
+        func_230337_a_(getBlockState(), pkt.getNbtCompound());
     }
 
     @Override
