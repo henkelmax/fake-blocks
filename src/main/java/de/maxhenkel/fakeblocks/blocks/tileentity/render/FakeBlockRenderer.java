@@ -1,7 +1,7 @@
 package de.maxhenkel.fakeblocks.blocks.tileentity.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.maxhenkel.fakeblocks.Tools;
+import de.maxhenkel.corelib.client.RenderUtils;
 import de.maxhenkel.fakeblocks.blocks.ModBlocks;
 import de.maxhenkel.fakeblocks.blocks.tileentity.FakeBlockTileEntity;
 import net.minecraft.block.BlockRenderType;
@@ -39,7 +39,7 @@ public class FakeBlockRenderer extends TileEntityRenderer<FakeBlockTileEntity> {
         matrixStackIn.push();
         BlockRendererDispatcher dispatcher = minecraft.getBlockRendererDispatcher();
         int color = minecraft.getBlockColors().getColor(state, null, null, 0);
-        dispatcher.getBlockModelRenderer().renderModel(matrixStackIn.getLast(), bufferIn.getBuffer(RenderTypeLookup.func_239221_b_(state)), state, dispatcher.getModelForState(state), Tools.getRed(color), Tools.getGreen(color), Tools.getBlue(color), combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        dispatcher.getBlockModelRenderer().renderModel(matrixStackIn.getLast(), bufferIn.getBuffer(RenderTypeLookup.func_239221_b_(state)), state, dispatcher.getModelForState(state), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
         matrixStackIn.pop();
     }
 

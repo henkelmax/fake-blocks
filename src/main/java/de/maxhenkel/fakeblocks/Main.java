@@ -1,5 +1,6 @@
 package de.maxhenkel.fakeblocks;
 
+import de.maxhenkel.corelib.CommonRegistry;
 import de.maxhenkel.fakeblocks.blocks.ModBlocks;
 import de.maxhenkel.fakeblocks.blocks.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
@@ -10,11 +11,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,20 +25,15 @@ public class Main {
 
     public static final Logger LOGGER = LogManager.getLogger(MODID);
 
+    public static ServerConfig SERVER_CONFIG;
+
     public Main() {
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, event -> ModBlocks.registerItems((RegistryEvent.Register<Item>) event));
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, event -> ModBlocks.registerBlocks((RegistryEvent.Register<Block>) event));
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(TileEntityType.class, event -> ModTileEntities.registerTileEntities((RegistryEvent.Register<TileEntityType<?>>) event));
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup));
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_SPEC);
-    }
-
-    @SubscribeEvent
-    public void commonSetup(FMLCommonSetupEvent event) {
-
+        SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class, true);
     }
 
     @SubscribeEvent
