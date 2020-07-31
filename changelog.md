@@ -1,1 +1,1 @@
-- Internal changes
+- Re-added HWYLA integration
