@@ -1,1 +1,1 @@
-- Re-added HWYLA integration
+- Fixed crash

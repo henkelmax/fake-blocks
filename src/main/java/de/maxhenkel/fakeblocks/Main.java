@@ -8,7 +8,6 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
@@ -28,9 +27,9 @@ public class Main {
     public static ServerConfig SERVER_CONFIG;
 
     public Main() {
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, event -> ModBlocks.registerItems((RegistryEvent.Register<Item>) event));
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, event -> ModBlocks.registerBlocks((RegistryEvent.Register<Block>) event));
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(TileEntityType.class, event -> ModTileEntities.registerTileEntities((RegistryEvent.Register<TileEntityType<?>>) event));
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, ModBlocks::registerItems);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, ModBlocks::registerBlocks);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(TileEntityType.class, ModTileEntities::registerTileEntities);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup));
 
         SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class, true);
