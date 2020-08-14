@@ -1,1 +1,1 @@
-- Update pack format
+- Added Brazilian Portuguese translation
