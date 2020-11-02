@@ -21,8 +21,8 @@ public class FakeBlockTileEntity extends TileEntity {
     }
 
     @Override
-    public void func_230337_a_(BlockState blockState, CompoundNBT compound) {
-        super.func_230337_a_(blockState, compound);
+    public void read(BlockState blockState, CompoundNBT compound) {
+        super.read(blockState, compound);
         if (compound.contains("Block")) {
             this.blockState = NBTUtil.readBlockState(compound.getCompound("Block"));
         } else {
@@ -69,7 +69,7 @@ public class FakeBlockTileEntity extends TileEntity {
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        func_230337_a_(getBlockState(), pkt.getNbtCompound());
+        read(getBlockState(), pkt.getNbtCompound());
     }
 
     @Override

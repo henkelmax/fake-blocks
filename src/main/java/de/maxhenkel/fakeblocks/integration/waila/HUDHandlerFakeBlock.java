@@ -23,7 +23,7 @@ public class HUDHandlerFakeBlock implements IComponentProvider {
             block = ModBlocks.FAKE_BLOCK.getDefaultState();
         }
         ITaggableList<ResourceLocation, ITextComponent> tooltip = (ITaggableList<ResourceLocation, ITextComponent>) tip;
-        tooltip.setTag(PluginFakeBlocks.OBJECT_NAME_TAG, new StringTextComponent(String.format(Waila.CONFIG.get().getFormatting().getBlockName(), block.getBlock().func_235333_g_().getString())));
+        tooltip.setTag(PluginFakeBlocks.OBJECT_NAME_TAG, new StringTextComponent(String.format(Waila.CONFIG.get().getFormatting().getBlockName(), block.getBlock().getTranslatedName().getString())));
         if (config.get(PluginFakeBlocks.CONFIG_SHOW_REGISTRY)) {
             tooltip.setTag(PluginFakeBlocks.REGISTRY_NAME_TAG, new StringTextComponent(String.format(Waila.CONFIG.get().getFormatting().getRegistryName(), block.getBlock().getRegistryName())));
         }
