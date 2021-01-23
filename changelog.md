@@ -1,1 +1,1 @@
-- Updated dependencies
+- Fixed crash when clicking block with ladder

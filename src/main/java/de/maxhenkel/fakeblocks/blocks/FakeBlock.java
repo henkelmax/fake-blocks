@@ -52,7 +52,7 @@ public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock 
             if (heldItem.getItem() instanceof BlockItem) {
                 Block block = ((BlockItem) heldItem.getItem()).getBlock();
                 BlockState setBlockState = block.getStateForPlacement(new BlockItemUseContext(new ItemUseContext(player, handIn, hit)));
-                if (Block.isOpaque(block.getCollisionShape(setBlockState, worldIn, pos, ISelectionContext.dummy())) && block.getRenderType(setBlockState) == BlockRenderType.MODEL && !Main.SERVER_CONFIG.fakeBlockBlacklist.contains(block)) {
+                if (setBlockState != null && Block.isOpaque(setBlockState.getCollisionShape(worldIn, pos)) && block.getRenderType(setBlockState) == BlockRenderType.MODEL && !Main.SERVER_CONFIG.fakeBlockBlacklist.contains(block)) {
                     if (!worldIn.isRemote) {
                         fakeBlock.setBlockState(setBlockState);
                         SoundType type = block.getSoundType(setBlockState);
