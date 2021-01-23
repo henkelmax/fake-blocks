@@ -1,1 +1,1 @@
-- Update to 1.16.5
+- Fixed crash when clicking block with ladder
