@@ -15,7 +15,7 @@ public class ModTileEntities {
     public static TileEntityType<FakeBlockTileEntity> FAKE_BLOCK;
 
     public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-        FAKE_BLOCK = TileEntityType.Builder.create(FakeBlockTileEntity::new, ModBlocks.FAKE_BLOCK).build(null);
+        FAKE_BLOCK = TileEntityType.Builder.of(FakeBlockTileEntity::new, ModBlocks.FAKE_BLOCK).build(null);
         FAKE_BLOCK.setRegistryName(new ResourceLocation(Main.MODID, "fakeblock"));
         event.getRegistry().register(FAKE_BLOCK);
     }

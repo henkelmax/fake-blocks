@@ -21,8 +21,8 @@ public class FakeBlockTileEntity extends TileEntity {
     }
 
     @Override
-    public void read(BlockState blockState, CompoundNBT compound) {
-        super.read(blockState, compound);
+    public void load(BlockState blockState, CompoundNBT compound) {
+        super.load(blockState, compound);
         if (compound.contains("Block")) {
             this.blockState = NBTUtil.readBlockState(compound.getCompound("Block"));
         } else {
@@ -31,8 +31,8 @@ public class FakeBlockTileEntity extends TileEntity {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         if (blockState != null) {
             compound.put("Block", NBTUtil.writeBlockState(blockState));
         }
@@ -46,35 +46,35 @@ public class FakeBlockTileEntity extends TileEntity {
 
     public void setBlockState(@Nullable BlockState blockState) {
         this.blockState = blockState;
-        markDirty();
+        setChanged();
     }
 
     @Override
-    public void markDirty() {
-        super.markDirty();
-        if (world instanceof ServerWorld) {
-            ServerWorld serverWorld = (ServerWorld) world;
-            serverWorld.getPlayers(player -> player.getDistanceSq(getPos().getX(), getPos().getY(), getPos().getZ()) <= 128D * 128D).forEach(this::syncContents);
+    public void setChanged() {
+        super.setChanged();
+        if (level instanceof ServerWorld) {
+            ServerWorld serverWorld = (ServerWorld) level;
+            serverWorld.getPlayers(player -> player.distanceToSqr(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()) <= 128D * 128D).forEach(this::syncContents);
         }
     }
 
     public void syncContents(ServerPlayerEntity player) {
-        player.connection.sendPacket(getUpdatePacket());
+        player.connection.send(getUpdatePacket());
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(pos, 1, getUpdateTag());
+        return new SUpdateTileEntityPacket(worldPosition, 1, getUpdateTag());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        read(getBlockState(), pkt.getNbtCompound());
+        load(getBlockState(), pkt.getTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return write(new CompoundNBT());
+        return save(new CompoundNBT());
     }
 
 }

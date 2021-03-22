@@ -31,33 +31,33 @@ import java.util.Optional;
 
 public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock {
 
-    public static final Material MATERIAL = new Material(MaterialColor.AIR, false, false, false, true, false, false, PushReaction.BLOCK);
+    public static final Material MATERIAL = new Material(MaterialColor.NONE, false, false, false, true, false, false, PushReaction.BLOCK);
 
     public FakeBlock() {
-        super(Block.Properties.create(MATERIAL).hardnessAndResistance(0.25F).sound(SoundType.SCAFFOLDING).doesNotBlockMovement());
+        super(Block.Properties.of(MATERIAL).strength(0.25F).sound(SoundType.SCAFFOLDING).noCollission());
         setRegistryName(new ResourceLocation(Main.MODID, "fakeblock"));
     }
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)).setRegistryName(getRegistryName());
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        ItemStack heldItem = player.getHeldItem(handIn);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        ItemStack heldItem = player.getItemInHand(handIn);
 
         FakeBlockTileEntity fakeBlock = getTileEntity(worldIn, pos).orElse(null);
         if (fakeBlock != null && fakeBlock.getBlock() == null) {
             if (heldItem.getItem() instanceof BlockItem) {
                 Block block = ((BlockItem) heldItem.getItem()).getBlock();
                 BlockState setBlockState = block.getStateForPlacement(new BlockItemUseContext(new ItemUseContext(player, handIn, hit)));
-                if (setBlockState != null && Block.isOpaque(setBlockState.getCollisionShape(worldIn, pos)) && block.getRenderType(setBlockState) == BlockRenderType.MODEL && !Main.SERVER_CONFIG.fakeBlockBlacklist.contains(block)) {
-                    if (!worldIn.isRemote) {
+                if (setBlockState != null && Block.isShapeFullBlock(setBlockState.getCollisionShape(worldIn, pos)) && block.getRenderShape(setBlockState) == BlockRenderType.MODEL && !Main.SERVER_CONFIG.fakeBlockBlacklist.contains(block)) {
+                    if (!worldIn.isClientSide) {
                         fakeBlock.setBlockState(setBlockState);
                         SoundType type = block.getSoundType(setBlockState);
                         worldIn.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, type.getPlaceSound(), SoundCategory.BLOCKS, type.getVolume(), type.getPitch());
-                        if (!player.abilities.isCreativeMode) {
+                        if (!player.abilities.instabuild) {
                             heldItem.shrink(1);
                         }
                     }
@@ -74,13 +74,13 @@ public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock 
     public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
         Optional<FakeBlockTileEntity> tileEntity = getTileEntity(world, pos);
         if (tileEntity.isPresent() && tileEntity.get().getBlock() != null) {
-            if (!world.isRemote) {
+            if (!world.isClientSide) {
                 BlockState blockState = tileEntity.get().getBlock();
                 SoundType type = blockState.getBlock().getSoundType(blockState);
                 world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, type.getPlaceSound(), SoundCategory.BLOCKS, type.getVolume(), type.getPitch());
                 tileEntity.get().setBlockState(null);
                 if (!player.isCreative()) {
-                    spawnAsEntity(world, pos, new ItemStack(blockState.getBlock()));
+                    popResource(world, pos, new ItemStack(blockState.getBlock()));
                 }
             }
             return false;
@@ -89,7 +89,7 @@ public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock 
     }
 
     public static Optional<FakeBlockTileEntity> getTileEntity(IBlockReader world, BlockPos pos) {
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
         if (te instanceof FakeBlockTileEntity) {
             return Optional.of((FakeBlockTileEntity) te);
         }
@@ -106,7 +106,7 @@ public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock 
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
@@ -117,12 +117,12 @@ public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock 
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+    public TileEntity newBlockEntity(IBlockReader worldIn) {
         return new FakeBlockTileEntity();
     }
 
     protected static final VoxelShape SHAPE_EMPTY = VoxelShapes.empty();
-    protected static final VoxelShape SHAPE_FULL = VoxelShapes.fullCube();
+    protected static final VoxelShape SHAPE_FULL = VoxelShapes.block();
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
@@ -130,12 +130,12 @@ public class FakeBlock extends Block implements ITileEntityProvider, IItemBlock 
     }
 
     @Override
-    public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public VoxelShape getInteractionShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return SHAPE_FULL;
     }
 
     @Override
-    public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public VoxelShape getOcclusionShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return SHAPE_FULL;
     }
 

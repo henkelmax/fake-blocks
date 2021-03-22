@@ -28,19 +28,19 @@ public class FakeBlockRenderer extends TileEntityRenderer<FakeBlockTileEntity> {
 
     @Override
     public void render(FakeBlockTileEntity target, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        BlockState state = ModBlocks.FAKE_BLOCK.getDefaultState();
+        BlockState state = ModBlocks.FAKE_BLOCK.defaultBlockState();
         BlockState block = target.getBlock();
         if (block != null) {
-            if (block.getRenderType() == BlockRenderType.MODEL) {
+            if (block.getRenderShape() == BlockRenderType.MODEL) {
                 state = block;
             }
         }
 
-        matrixStackIn.push();
-        BlockRendererDispatcher dispatcher = minecraft.getBlockRendererDispatcher();
+        matrixStackIn.pushPose();
+        BlockRendererDispatcher dispatcher = minecraft.getBlockRenderer();
         int color = minecraft.getBlockColors().getColor(state, null, null, 0);
-        dispatcher.getBlockModelRenderer().renderModel(matrixStackIn.getLast(), bufferIn.getBuffer(RenderTypeLookup.func_239221_b_(state)), state, dispatcher.getModelForState(state), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
-        matrixStackIn.pop();
+        dispatcher.getModelRenderer().renderModel(matrixStackIn.last(), bufferIn.getBuffer(RenderTypeLookup.getMovingBlockRenderType(state)), state, dispatcher.getBlockModel(state), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        matrixStackIn.popPose();
     }
 
 

@@ -1,1 +1,1 @@
-- Fixed crash when clicking block with ladder
+- Updated to official mappings

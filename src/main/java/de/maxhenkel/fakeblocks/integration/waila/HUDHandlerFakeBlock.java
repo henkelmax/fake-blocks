@@ -20,10 +20,10 @@ public class HUDHandlerFakeBlock implements IComponentProvider {
     public void appendHead(List<ITextComponent> tip, IDataAccessor accessor, IPluginConfig config) {
         BlockState block = ((FakeBlockTileEntity) accessor.getTileEntity()).getBlock();
         if (block == null) {
-            block = ModBlocks.FAKE_BLOCK.getDefaultState();
+            block = ModBlocks.FAKE_BLOCK.defaultBlockState();
         }
         ITaggableList<ResourceLocation, ITextComponent> tooltip = (ITaggableList<ResourceLocation, ITextComponent>) tip;
-        tooltip.setTag(PluginFakeBlocks.OBJECT_NAME_TAG, new StringTextComponent(String.format(Waila.CONFIG.get().getFormatting().getBlockName(), block.getBlock().getTranslatedName().getString())));
+        tooltip.setTag(PluginFakeBlocks.OBJECT_NAME_TAG, new StringTextComponent(String.format(Waila.CONFIG.get().getFormatting().getBlockName(), block.getBlock().getName().getString())));
         if (config.get(PluginFakeBlocks.CONFIG_SHOW_REGISTRY)) {
             tooltip.setTag(PluginFakeBlocks.REGISTRY_NAME_TAG, new StringTextComponent(String.format(Waila.CONFIG.get().getFormatting().getRegistryName(), block.getBlock().getRegistryName())));
         }
@@ -34,7 +34,7 @@ public class HUDHandlerFakeBlock implements IComponentProvider {
         tooltip.clear();
         BlockState block = ((FakeBlockTileEntity) accessor.getTileEntity()).getBlock();
         if (block == null) {
-            block = ModBlocks.FAKE_BLOCK.getDefaultState();
+            block = ModBlocks.FAKE_BLOCK.defaultBlockState();
         }
         tooltip.add(new StringTextComponent(String.format(Waila.CONFIG.get().getFormatting().getModName(), ModIdentification.getModInfo(block.getBlock()).getName())));
     }
