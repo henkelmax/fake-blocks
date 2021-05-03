@@ -1,5 +1,4 @@
-# Fake Blocks ![](http://cf.way2muchnoise.eu/full_252672_downloads.svg)
-![](http://cf.way2muchnoise.eu/versions/252672.svg)
+# Fake Blocks ![](http://cf.way2muchnoise.eu/full_252672_downloads.svg) ![](http://cf.way2muchnoise.eu/versions/252672.svg)
 
 ## Links
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/fakeblocks)
