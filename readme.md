@@ -2,9 +2,6 @@
 
 ## Links
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/fakeblocks)
-- [ModRepo](https://modrepo.de/minecraft/fakeblocks/overview)
-- [GitHub](https://github.com/henkelmax/fake-blocks)
-- [FAQ](https://modrepo.de/minecraft/fakeblocks/faq)
 - [Credits](https://modrepo.de/minecraft/fakeblocks/credits)
 
 ---
